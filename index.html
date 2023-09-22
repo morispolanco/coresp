@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corrección de Textos en Español</title>
+</head>
+<body>
+  <h1>Corrección de Textos en Español</h1>
+  <textarea id="text-input" rows="5" cols="50"></textarea>
+  <button id="correct-button">Corregir</button>
+  <div id="corrected-text"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/openai/dist/openai.browser.min.js"></script>
+  <script>
+    const openai = new OpenAI('TU_API_KEY_DE_GPT3');
+
+    const textInput = document.getElementById('text-input');
+    const correctButton = document.getElementById('correct-button');
+    const correctedText = document.getElementById('corrected-text');
+
+    correctButton.addEventListener('click', async () => {
+      const text = textInput.value;
+
+      try {
+        const response = await openai.complete({
+          engine: 'text-davinci-003',
+          prompt: `Corrige el siguiente texto en español:\n\n${text}`,
+          maxTokens: 100,
+          temperature: 0.7,
+          topP: 1,
+          n: 1,
+          stop: '\n',
+        });
+
+        const corrected = response.choices[0].text.trim();
+        correctedText.textContent = corrected;
+      } catch (error) {
+        console.error(error);
+        correctedText.textContent = 'Error al corregir el texto';
+      }
+    });
+  </script>
+</body>
+</html>
